@@ -1,0 +1,39 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Build and push Docker image to ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: onishilabs.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - run: |
+        docker build -t onishilabs.azurecr.io/conversao-distancia:latest .
+        docker push onishilabs.azurecr.io/conversao-distancia:latest
+
+    - name: Deploy to Azure Container Instance
+      uses: azure/aci-deploy@v1
+      with:
+        resource-group: DevopsPro
+        name: conversao-distancia
+        image: onishilabs.azurecr.io/conversao-distancia:latest
+        dns-name-label: conversao-distancia-app
+        ports: 8000
