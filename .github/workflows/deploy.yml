@@ -34,6 +34,7 @@ jobs:
       with:
         resource-group: DevopsPro
         name: conversao-distancia
+        location: eastus2
         image: onishilabs.azurecr.io/conversao-distancia:latest
         dns-name-label: conversao-distancia-app
         ports: 8000
