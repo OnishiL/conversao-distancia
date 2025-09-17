@@ -38,3 +38,10 @@ jobs:
         image: onishilabs.azurecr.io/conversao-distancia:latest
         dns-name-label: conversao-distancia-app
         ports: 8000
+        ip-address: Public
+        os-type: Linux
+        protocol: TCP
+        restart-policy: Always
+        registry-login-server: onishilabs.azurecr.io
+        registry-username: ${{ secrets.ACR_USERNAME }}
+        registry-password: ${{ secrets.ACR_PASSWORD }}
